@@ -1,0 +1,5 @@
+Czarny: 02040F
+Szary: E5DADA
+Żółty: E59500
+Czerwony: 840032
+Niebieski: 002642
