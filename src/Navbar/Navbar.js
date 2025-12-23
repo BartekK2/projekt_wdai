@@ -116,6 +116,7 @@ export default function Navbar() {
                 key={link.label}
                 component={Link}
                 to={link.path}
+                
                 color="inherit"
               >
                 {link.icon&& <link.icon sx={{ mr: 1 }}/>}
@@ -133,7 +134,7 @@ export default function Navbar() {
           style={{color:"white"}} onClick={handleLogut}>Wyloguj się</Button>
           </>
           :
-          <Button variant="contained" color="secondary">
+          <Button variant="contained" color="secondary" sx={{color: "white"}}>
             Zaloguj się
           </Button>
           }
@@ -152,7 +153,7 @@ export default function Navbar() {
           <Divider />
           <List>
             {navLinks.map((link) => (
-              <ListItemButton key={link.label} component={Link} to={link.path}>
+              <ListItemButton key={link.label} component={Link} to={link.path} >
                 {link.icon && (
                   <ListItemIcon>
                     <link.icon />

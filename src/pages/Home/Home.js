@@ -3,7 +3,8 @@ import { DotLottiePlayer } from '@dotlottie/react-player';
 import '@dotlottie/react-player/dist/index.css';
 import './Home.css'; // import pliku CSS
 import { Link } from "react-router-dom";
-import {getCurrentUser, isLoggedIn} from "../../API/AUTH";
+import {isLoggedIn} from "../../API/AUTH";
+import { useEffect, useState } from "react";
 
 /*
 TODO:
@@ -14,31 +15,36 @@ bo się zlewa z tłem
 
 
 function Home() {
+  const [logged, setisLoggedIn] = useState(false);
+  useEffect(() => {
+    setisLoggedIn(isLoggedIn());
+  }, [])
+  
   return (
     <div className="home-container">
       <div className="home-left">
         <Typography variant="h3" component="h1" className="home-title">
-          Witaj {isLoggedIn && 'z powrotem'} w naszej aplikacji!
+          Witaj {logged && 'z powrotem'} na naszej stronie!
         </Typography>
         <Typography variant="h6" className="home-subtitle">
-          {isLoggedIn?
+          {logged?
           'Miłych zakupów!'
           :
           'Zaloguj się, aby rozpocząć, lub zarejestruj nowe konto'
           }
         </Typography>
-        {isLoggedIn ?
+        {logged ?
         <div className="home-buttons">
-          <Button variant="contained" color="primary" size="large" component={Link} to="/login?action=login">
+          <Button variant="contained" color="primary" size="large" component={Link}  to="/login?action=login">
             Nasze produkty
           </Button>
         </div>
         :
         <div className="home-buttons">
-          <Button variant="contained" color="primary" size="large" component={Link} to="/login?action=login">
+          <Button variant="contained" color="secondary" sx={{color:"white"}} size="large" component={Link}  to="/login?action=login">
             Zaloguj się
           </Button>
-          <Button variant="outlined" color="primary" size="large" component={Link} to="/login?action=registration">
+          <Button color="secondary" variant="outlined" size="large" component={Link}  to="/login?action=registration">
             Zarejestruj się
           </Button>
         </div>

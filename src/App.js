@@ -1,10 +1,3 @@
-/*
-TODO:
-
-chyba da sie jakos animowac reactrouter sproboj dodac
-
-*/
-
 import { ThemeProvider } from '@mui/material/styles';
 import CssBaseline from '@mui/material/CssBaseline';
 import { theme } from './MaterialUICustiomization/theme';
@@ -26,7 +19,6 @@ function App() {
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/login" element={<Login />} />
-
         </Routes>
       </BrowserRouter>
     </ThemeProvider>
