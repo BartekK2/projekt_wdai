@@ -32,22 +32,45 @@ import AccountBoxIcon from '@mui/icons-material/AccountBox';
 import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
 
 import { Link } from "react-router-dom";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+
+
+import {getCurrentUser, isLoggedIn, logout} from "../API/AUTH";
+
+
 // jeśli będziesz to zmieniał to musi być odpowiedni komponent
 // dla tej strony tak jak dla strony głównej jest Home
 // podlinkowany w routerze w App do linku "/"
-
 const navLinks = [
   { label: "Strona główna", path: "/", icon: HomeIcon },
   { label: "Konto", path: "/konto", icon: AccountBoxIcon },
   { label: "Koszyk", path: "/koszyk", icon: ShoppingCartIcon }
 ];
+
+
 // responsywność i styl zrobiłem bezpośrednio
 // w wbudowanym w materialUI narzędziu do tego w sensie
 // sx to style xs, md itd to rozmiar okna że mobilny, desktopowy
-
 export default function Navbar() {
   const [drawerOpen, setDrawerOpen] = useState(false);
+  const [user, setuser] = useState(null);
+  const [loggedIn, setloggedIn] = useState(false);
+
+  const updateAuth = () => {
+    setuser(getCurrentUser());
+    setloggedIn(isLoggedIn);
+    console.log(user, loggedIn)
+  }
+
+  const handleLogut = () => {
+    logout();
+    updateAuth();
+  }
+
+  useEffect(() => {
+    updateAuth();
+  }, [])
+  
 
   return (
     <>
@@ -100,9 +123,22 @@ export default function Navbar() {
           </Box>
 
           {/* PRAWA STRONA: użytkownik */}
-          <Box sx={{ ml: "auto" }}>
-            <Avatar sx={{ width: 32, height: 32 }}>U</Avatar>
+          <Box sx={{ ml: "auto",  display:"flex"}}>
+          {loggedIn?
+          <>
+            <Avatar sx={{ width: 32, height: 32,mr:1, bgcolor: "secondary.main" }}>{user&&user.username[0].toUpperCase()}</Avatar>
+          <Button variant="contained" color="secondary" 
+          style={{color:"white"}} onClick={handleLogut}>Wyloguj się</Button>
+          </>
+          :
+          <Button variant="contained" color="secondary">
+            Zaloguj się
+          </Button>
+          }
           </Box>
+        
+          
+          
         </Toolbar>
       </AppBar>
 
