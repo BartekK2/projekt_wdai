@@ -3,16 +3,17 @@ import CssBaseline from '@mui/material/CssBaseline';
 import { theme } from './MaterialUICustiomization/theme';
 //podstrony
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import Home from './pages/Home/Home';
 
-import Home from './Home';
-
+// elementy globalne tj np navbar
+import Navbar from './Navbar/Navbar'
 
 function App() {
   return (
     <ThemeProvider theme={theme}>
       <CssBaseline />
       <BrowserRouter>
-        {/* Tutaj wstaw pozniej navbar i nizej footbar */}
+        <Navbar/>
         <Routes>
           <Route path="/" element={<Home />} />
         </Routes>
