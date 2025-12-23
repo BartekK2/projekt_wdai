@@ -1,7 +1,9 @@
 /*
 TODO:
-- zrobic wariant ze zamiast ikonki uzytkownika jest opcja logowania
-- dodac do uzytkownika opcje wylogowania się (rozwijane menu) itd
+
+poprawić wygląd prawej części tj ikonka uzytkownika
+i wyglad przycisku do logoutu na najmniejszych urzadzeniach
+
 */
 
 
@@ -93,7 +95,7 @@ export default function Navbar() {
               variant="h6"
               component={Link}
               to="/"
-              sx={{ textDecoration: "none", color: "inherit", fontWeight: 600 }}
+              sx={{ display: { xs: "none",sm: "block"}, textDecoration: "none", color: "inherit", fontWeight: 600 }}
             >
               ShoppingHaul
             </Typography>
@@ -136,12 +138,8 @@ export default function Navbar() {
           </Button>
           }
           </Box>
-        
-          
-          
         </Toolbar>
       </AppBar>
-
       {/* Menu dla mobilnej */}
       <Drawer
         anchor="left"

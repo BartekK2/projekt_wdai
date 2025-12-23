@@ -2,6 +2,7 @@ import { Button, Typography } from "@mui/material";
 import { DotLottiePlayer } from '@dotlottie/react-player';
 import '@dotlottie/react-player/dist/index.css';
 import './Home.css'; // import pliku CSS
+import { Link } from "react-router-dom";
 
 /*
 TODO:
@@ -23,10 +24,10 @@ function Home() {
           Zaloguj się, aby rozpocząć, lub zarejestruj nowe konto
         </Typography>
         <div className="home-buttons">
-          <Button variant="contained" color="primary" size="large">
+          <Button variant="contained" color="primary" size="large" component={Link} to="/login?action=login">
             Zaloguj się
           </Button>
-          <Button variant="outlined" color="primary" size="large">
+          <Button variant="outlined" color="primary" size="large" component={Link} to="/login?action=registration">
             Zarejestruj się
           </Button>
         </div>

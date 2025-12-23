@@ -1,3 +1,10 @@
+/*
+TODO:
+
+chyba da sie jakos animowac reactrouter sproboj dodac
+
+*/
+
 import { ThemeProvider } from '@mui/material/styles';
 import CssBaseline from '@mui/material/CssBaseline';
 import { theme } from './MaterialUICustiomization/theme';
@@ -5,7 +12,7 @@ import { theme } from './MaterialUICustiomization/theme';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import Home from './pages/Home/Home';
 import Login from './pages/Login_Registration/Login';
-
+import "./App.css"
 
 // elementy globalne tj np navbar
 import Navbar from './Navbar/Navbar'
