@@ -10,17 +10,23 @@ import "./App.css"
 // elementy globalne tj np navbar
 import Navbar from './Navbar/Navbar'
 
+// serwer autentykacja itd
+import { AuthProvider } from './API/AuthContext';
+
 function App() {
   return (
     <ThemeProvider theme={theme}>
       <CssBaseline />
-      <BrowserRouter>
-        <Navbar/>
-        <Routes>
-          <Route path="/" element={<Home />} />
-          <Route path="/login" element={<Login />} />
-        </Routes>
-      </BrowserRouter>
+      <AuthProvider>
+        <BrowserRouter>
+          <Navbar/>
+          <Routes>
+            <Route path="/" element={<Home />} />
+            <Route path="/login" element={<Login />} />
+          </Routes>
+        </BrowserRouter>
+      </AuthProvider>
+
     </ThemeProvider>
   );
 }

@@ -6,7 +6,6 @@ i wyglad przycisku do logoutu na najmniejszych urzadzeniach
 
 */
 
-
 import {
   AppBar,
   Toolbar,
@@ -34,13 +33,10 @@ import AccountBoxIcon from '@mui/icons-material/AccountBox';
 import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
 
 import { Link } from "react-router-dom";
-import { useEffect, useState } from "react";
+import { useState,useContext } from "react";
+import { AuthContext } from "../API/AuthContext";
 
-
-import {getCurrentUser, isLoggedIn, logout} from "../API/AUTH";
-
-
-// jeśli będziesz to zmieniał to musi być odpowiedni komponent
+// szymon jeśli będziesz to zmieniał to musi być odpowiedni komponent
 // dla tej strony tak jak dla strony głównej jest Home
 // podlinkowany w routerze w App do linku "/"
 const navLinks = [
@@ -49,38 +45,16 @@ const navLinks = [
   { label: "Koszyk", path: "/koszyk", icon: ShoppingCartIcon }
 ];
 
-
-// responsywność i styl zrobiłem bezpośrednio
-// w wbudowanym w materialUI narzędziu do tego w sensie
-// sx to style xs, md itd to rozmiar okna że mobilny, desktopowy
 export default function Navbar() {
   const [drawerOpen, setDrawerOpen] = useState(false);
-  const [user, setuser] = useState(null);
-  const [loggedIn, setloggedIn] = useState(false);
-
-  const updateAuth = () => {
-    setuser(getCurrentUser());
-    setloggedIn(isLoggedIn);
-    console.log(user, loggedIn)
-  }
-
-  const handleLogut = () => {
-    logout();
-    updateAuth();
-  }
-
-  useEffect(() => {
-    updateAuth();
-  }, [])
-  
+  const { user, logout } = useContext(AuthContext);
 
   return (
     <>
       <AppBar position="sticky">
         <Toolbar sx={{ position: "relative" }}>
-          {/* LEWA STRONA: Hamburger + Logo */}
           <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
-            {/* Hamburger: widoczny tylko w wersji mobilnej */}
+            {/* Przycisk: widoczny tylko w wersji mobilnej */}
             <IconButton
               color="inherit"
               edge="start"
@@ -127,14 +101,15 @@ export default function Navbar() {
 
           {/* PRAWA STRONA: użytkownik */}
           <Box sx={{ ml: "auto",  display:"flex"}}>
-          {loggedIn?
+          {user?
           <>
             <Avatar sx={{ width: 32, height: 32,mr:1, bgcolor: "secondary.main" }}>{user&&user.username[0].toUpperCase()}</Avatar>
           <Button variant="contained" color="secondary" 
-          style={{color:"white"}} onClick={handleLogut}>Wyloguj się</Button>
+          style={{color:"white"}} onClick={logout}>Wyloguj się</Button>
           </>
           :
-          <Button variant="contained" color="secondary" sx={{color: "white"}}>
+          <Button variant="contained" color="secondary" sx={{color: "white"}} component={Link} 
+                to="/login">
             Zaloguj się
           </Button>
           }

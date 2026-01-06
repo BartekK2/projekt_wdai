@@ -7,8 +7,8 @@ sekund od zalogowania zeby jeszcze byl widoczny komunikat
 */
 
 
-import { useState, useEffect } from "react";
-import { useLocation } from "react-router-dom";
+import { useState, useEffect, useContext} from "react";
+import { useLocation,useNavigate } from "react-router-dom";
 import {
   Box,
   TextField,
@@ -16,10 +16,12 @@ import {
   Typography,
 } from "@mui/material";
 
-import { login, register } from "../../API/AUTH";
+import { AuthContext } from "../../API/AuthContext";
 
 export default function AuthPage() {
+  const {user,login, register } = useContext(AuthContext);
   const location = useLocation();
+  const navigate = useNavigate();
   const queryParams = new URLSearchParams(location.search);
   const initialAction = queryParams.get("action") || "login";
 
@@ -29,7 +31,6 @@ export default function AuthPage() {
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
 
-  // ustaw tryb przy wejściu na stronę
   useEffect(() => {
     setMode(initialAction);
     setError("");
@@ -38,27 +39,44 @@ export default function AuthPage() {
     setPassword("");
   }, [initialAction]);
 
-  const handleSubmit = () => {
+  useEffect(() => {
+    if (user) {
+      navigate("/", { replace: true }); 
+    }
+  }, [user, navigate]);
+
+  const handleSubmit = async () => {
     setError("");
     setSuccess("");
-    console.log(username,password)
+    
     if (!username || !password) {
       setError("Wypełnij wszystkie pola!");
       return;
     }
 
     if (mode === "login") {
-      const ok = login(username, password);
-      if (ok) {
+      const result = await login(username, password); 
+      
+      console.log("Wynik logowania:", result);
+
+      if (result && result.success) {
         setSuccess("Zalogowano pomyślnie!");
+        
+        setTimeout(() => {
+             navigate("/"); 
+        }, 2000);
       } else {
-        setError("Niepoprawny login lub hasło!");
+        setError(result?.msg || "Niepoprawny login lub hasło!");
       }
+
     } else if (mode === "registration") {
-      const ok = register(username, password);
-      if (ok) {
+      const result = await register(username, password);
+      
+      if (result && result.success) {
         setSuccess("Rejestracja udana! Możesz teraz zalogować się.");
         setMode("login");
+        setUsername("");
+        setPassword("");
       } else {
         setError("Użytkownik już istnieje!");
       }

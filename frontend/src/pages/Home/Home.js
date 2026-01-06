@@ -3,8 +3,8 @@ import { DotLottiePlayer } from '@dotlottie/react-player';
 import '@dotlottie/react-player/dist/index.css';
 import './Home.css'; // import pliku CSS
 import { Link } from "react-router-dom";
-import {isLoggedIn} from "../../API/AUTH";
-import { useEffect, useState } from "react";
+import { useEffect, useState,useContext } from "react";
+import { AuthContext } from "../../API/AuthContext";
 
 /*
 TODO:
@@ -15,27 +15,24 @@ bo się zlewa z tłem
 
 
 function Home() {
-  const [logged, setisLoggedIn] = useState(false);
-  useEffect(() => {
-    setisLoggedIn(isLoggedIn());
-  }, [])
+  const { user } = useContext(AuthContext);
   
   return (
     <div className="home-container">
       <div className="home-left">
         <Typography variant="h3" component="h1" className="home-title">
-          Witaj {logged && 'z powrotem'} na naszej stronie!
+          Witaj {user && 'z powrotem'} na naszej stronie!
         </Typography>
         <Typography variant="h6" className="home-subtitle">
-          {logged?
+          {user?
           'Miłych zakupów!'
           :
           'Zaloguj się, aby rozpocząć, lub zarejestruj nowe konto'
           }
         </Typography>
-        {logged ?
+        {user ?
         <div className="home-buttons">
-          <Button variant="contained" color="primary" size="large" component={Link}  to="/login?action=login">
+          <Button variant="contained" color="primary" size="large" component={Link}  to="/">
             Nasze produkty
           </Button>
         </div>
