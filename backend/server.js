@@ -1,3 +1,12 @@
+/*
+TODO:
+
+trzeba dodać opinie - szybko pójdzie ale mi sie nie chce teraz
+i koszyk jeszcze chyba że to już lokalnie w sumie
+a i zamówienia
+*/
+
+
 const express = require('express');
 const { Sequelize, DataTypes } = require('sequelize');
 const cors = require('cors');

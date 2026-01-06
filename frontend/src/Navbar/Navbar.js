@@ -100,10 +100,10 @@ export default function Navbar() {
           </Box>
 
           {/* PRAWA STRONA: użytkownik */}
-          <Box sx={{ ml: "auto",  display:"flex"}}>
+          <Box sx={{ ml: "auto",  display:"flex", alignItems:"center"}}>
           {user?
           <>
-            <Avatar sx={{ width: 32, height: 32,mr:1, bgcolor: "secondary.main" }}>{user&&user.username[0].toUpperCase()}</Avatar>
+            <Avatar sx={{ width: 32, height: 32,mr:1, bgcolor: "secondary.main" }} style={{border:"2px solid black"}}>{user&&user.username[0].toUpperCase()}</Avatar>
           <Button variant="contained" color="secondary" 
           style={{color:"white"}} onClick={logout}>Wyloguj się</Button>
           </>

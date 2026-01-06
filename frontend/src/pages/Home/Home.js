@@ -1,7 +1,7 @@
 import { Button, Typography } from "@mui/material";
 import { DotLottiePlayer } from '@dotlottie/react-player';
 import '@dotlottie/react-player/dist/index.css';
-import './Home.css'; // import pliku CSS
+import './Home.css';
 import { Link } from "react-router-dom";
 import { useEffect, useState,useContext } from "react";
 import { AuthContext } from "../../API/AuthContext";
@@ -32,7 +32,7 @@ function Home() {
         </Typography>
         {user ?
         <div className="home-buttons">
-          <Button variant="contained" color="primary" size="large" component={Link}  to="/">
+          <Button variant="contained" color="primary" size="large" component={Link}  to="/shop">
             Nasze produkty
           </Button>
         </div>

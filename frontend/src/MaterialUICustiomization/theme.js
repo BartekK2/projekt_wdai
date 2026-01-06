@@ -3,13 +3,14 @@ import { createTheme } from '@mui/material/styles';
 export const theme = createTheme({
   palette: {
     primary: {
-      main: '#840032',
+      main: '#be3838ff',
       light: '#9f023eff',
       dark: '#550222ff',
       contrastText: '#fff',
     },
     secondary: {
-      main: '#E59500',
+      main: '#f2b84bff',
+      contrastText: '#fff',
     },
     background: {
       default: '#f3f3f3ff',
@@ -23,7 +24,12 @@ export const theme = createTheme({
   components: {
     MuiButton: {
       styleOverrides: {
-        root: { borderRadius: 8 }, 
+        root: { borderRadius: 8,border:"solid 2px black" },
+      },
+    },
+    MuiChip: {
+      styleOverrides: {
+        root: { border:"solid 2px black" },
       },
     },
   },
