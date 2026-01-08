@@ -8,7 +8,7 @@ import Check from '@mui/icons-material/Check';
 import { Slider } from '@mui/material';
 import { useState } from 'react';
 
-export default function Filter() {
+export default function Filter({onAddCategory,categoriesMap}) {
 
   const [value, setValue] = useState([20, 37]);
 
@@ -22,24 +22,13 @@ export default function Filter() {
           <ListItemText>Uwzględnij kategorie:</ListItemText>
         </MenuItem>
         <Divider />
+        {Object.keys(categoriesMap).map(label => (
+          <MenuItem onClick={()=>{onAddCategory(label)}}>
+          < ListItemText inset>{label}</ListItemText>
+          </MenuItem>
+        ))}
+        
 
-        <MenuItem>
-          <ListItemText inset>Buty</ListItemText>
-        </MenuItem>
-        <MenuItem>
-          <ListItemText inset>Dla dzieci</ListItemText>
-        </MenuItem>
-        <MenuItem>
-          <ListItemText inset>Odzież</ListItemText>
-        </MenuItem>
-        
-        <MenuItem>
-          <ListItemText inset>Biżuteria</ListItemText>
-        </MenuItem>
-        
-        <MenuItem>
-          <ListItemText inset>Kosmetyki</ListItemText>
-        </MenuItem>
         <Divider />
         <MenuItem>
           <ListItemText>Zakres cenowy:</ListItemText>

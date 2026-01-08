@@ -3,7 +3,7 @@ import { DotLottiePlayer } from '@dotlottie/react-player';
 import '@dotlottie/react-player/dist/index.css';
 import './Home.css';
 import { Link } from "react-router-dom";
-import { useEffect, useState,useContext } from "react";
+import { useContext } from "react";
 import { AuthContext } from "../../API/AuthContext";
 
 /*

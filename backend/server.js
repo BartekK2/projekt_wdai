@@ -26,12 +26,20 @@ const Product = db.define('Product', {
     category: DataTypes.STRING
 });
 
+
+const Cart = db.define('Cart', {
+    quantity: { 
+        type: DataTypes.INTEGER, 
+        defaultValue: 1,
+        allowNull: false
+    }
+});
+
 const User = db.define('User', {
     username: { type: DataTypes.STRING, unique: true },
     password: { type: DataTypes.STRING },
     role: { type: DataTypes.STRING, defaultValue: 'user' }
 });
-
 
 
 const verifyToken = (req, res, next) => {
@@ -46,6 +54,46 @@ const verifyToken = (req, res, next) => {
 };
 
 app.get('/products', async (req, res) => res.json(await Product.findAll()));
+
+
+app.get('/cart', verifyToken, async (req, res) => {
+    try {
+        const userCart = await Cart.findAll({
+            where: { 
+                UserId: req.user.id
+            },
+            include: [{
+                model: Product,
+            }]
+        });
+
+        const cleanList = userCart.map(item => ({
+            cartId: item.id,
+            quantity: item.quantity,
+            productId: item.Product.id,
+            name: item.Product.name,
+            price: item.Product.price,
+            category: item.Product.category,
+            totalPrice: item.quantity * item.Product.price
+        }));
+
+        res.json(cleanList);
+
+    } catch (e) {
+        console.error(e);
+        res.status(500).json({ error: "Nie udało się pobrać koszyka" });
+    }
+});
+
+// Użytkownik ma wiele pozycji w koszyku
+User.hasMany(Cart);
+Cart.belongsTo(User);
+
+// Produkt może być w wielu koszykach
+Product.hasMany(Cart);
+Cart.belongsTo(Product);
+
+
 
 app.post('/register', async (req, res) => {
     const user = await User.create(req.body);
