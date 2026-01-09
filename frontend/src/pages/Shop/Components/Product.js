@@ -8,11 +8,12 @@ import Typography from '@mui/material/Typography';
 import FavoriteIcon from '@mui/icons-material/Favorite';
 import ShareIcon from '@mui/icons-material/Share';
 import AddShoppingCartIcon from '@mui/icons-material/AddShoppingCart';
+import { Link } from 'react-router-dom';
 
-export default function Product({ category, description, imageURL, name,price}) {
+export default function Product({ category, description, imageURL, name,price,id}) {
   return (
     <Card sx={{ width: "300px",height:"430px" }} style={{border:"solid 1px",borderRadius:"20px",display:"flex",flexDirection:"column"}} variant="outlined">
-        <CardActionArea style={{flex:1,display:"flex",flexDirection:"column",justifyContent:"flex-start"}}>
+        <CardActionArea style={{flex:1,display:"flex",flexDirection:"column",justifyContent:"flex-start"}} component={Link} to={`/product?id=${id}`}>
             <CardMedia
                 component="img"
                 height="194"

@@ -29,7 +29,7 @@ function Shop() {
     const { getProducts } = useContext(dataContext);
     const [products, setproducts] = useState([]);
 
-    const [categories, setcategories] = useState([]);
+    const [categories, setcategories] = useState(Object.keys(categoriesMap));
     const [priceRange, setpriceRange] = useState([0, 2000]);
 
     const [search, setsearch] = useState("");
@@ -43,9 +43,6 @@ function Shop() {
     const addCategory = (categoryName) => {
         setcategories([...categories, categoryName]);
     }
-    useEffect(() => {
-        setcategories(Object.keys(categoriesMap));
-    }, [])
 
     useEffect(() => {
         const fetchData = async () => {
@@ -67,7 +64,7 @@ function Shop() {
                 <CategoryPanel chosenCategories={categories} categoriesMap={categoriesMap} onCategoryDelete={deleteCategory}/>
                 <div style={{width:"100%",height:"100%",overflowY:"auto",display:"flex",gap:"30px", flexWrap:"wrap",justifyContent:"center"}}>
                     {products.map(({id, category,description, imageURL, name,price}) => 
-                    <Product key={id} description={description} category={category} imageURL={imageURL} name={name} price={price}/>)}
+                    <Product key={id} id={id}description={description} category={category} imageURL={imageURL} name={name} price={price}/>)}
                 </div>
                 </div>
 

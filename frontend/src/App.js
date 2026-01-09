@@ -6,7 +6,7 @@ import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import Home from './pages/Home/Home';
 import Login from './pages/Login_Registration/Login';
 import Shop from './pages/Shop/ShopPage';
-
+import ProductPage from './pages/ProductPage/ProductPage'
 import "./App.css"
 
 // elementy globalne tj np navbar
@@ -28,6 +28,8 @@ function App() {
               <Route path="/" element={<Home />} />
               <Route path="/login" element={<Login />} />
               <Route path="/shop" element={<Shop />} />
+              <Route path="/product" element={<ProductPage />} />
+
             </Routes>
           </BrowserRouter>
         </DataProvider>

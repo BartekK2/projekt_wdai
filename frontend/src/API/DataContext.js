@@ -70,14 +70,17 @@ export const DataProvider = ({ children }) => {
         }
     };
 
-    const getProducts = async (categories, minPrice, maxPrice,name) => {
+    const getProducts = async (categories, minPrice, maxPrice,name,id=null) => {
         try {
             const params = new URLSearchParams({
                 minPrice: minPrice,
                 maxPrice: maxPrice,
-                name: name // w sensie że żeby sie zaczynało od tego
+                name: name,
+                id:id // w sensie że żeby sie zaczynało od tego
             });
             categories.forEach(cat => params.append('categories', cat));
+
+            
             const response = await fetch(`${API_URL}/products?${params.toString()}`, {
                 method: 'GET',
                 headers: { 
