@@ -8,7 +8,7 @@ a i zamówienia
 
 
 const express = require('express');
-const { Sequelize, DataTypes } = require('sequelize');
+const { Sequelize, DataTypes, Op } = require('sequelize');
 const cors = require('cors');
 const jwt = require('jsonwebtoken');
 
@@ -23,7 +23,9 @@ const db = new Sequelize({ dialect: 'sqlite',  storage: './baza.sqlite', logging
 const Product = db.define('Product', {
     name: DataTypes.STRING,
     price: DataTypes.FLOAT,
-    category: DataTypes.STRING
+    category: DataTypes.STRING,
+    imageURL: DataTypes.STRING,
+    description: DataTypes.TEXT
 });
 
 
@@ -32,6 +34,20 @@ const Cart = db.define('Cart', {
         type: DataTypes.INTEGER, 
         defaultValue: 1,
         allowNull: false
+    }
+});
+
+const Reviews = db.define('Reviews', {
+    stars: {
+        type: DataTypes.INTEGER,
+        allowNull: false,
+        validate: {
+            min: 1,
+            max: 5
+        }
+    },
+    description: {
+        type: DataTypes.TEXT
     }
 });
 
@@ -53,8 +69,66 @@ const verifyToken = (req, res, next) => {
     });
 };
 
-app.get('/products', async (req, res) => res.json(await Product.findAll()));
 
+app.get('/products', async (req, res) => {
+    try {
+        const { minPrice, maxPrice, categories, name } = req.query;
+
+        const whereClause = {};
+
+        if (minPrice || maxPrice) {
+            whereClause.price = {};
+            if (minPrice) {
+                whereClause.price[Op.gte] = Number(minPrice);
+            }
+            if (maxPrice) {
+                whereClause.price[Op.lte] = Number(maxPrice);
+            }
+        }
+        if (categories) {
+            whereClause.category = categories; // sequelize od razu przetłumaczy na where category in [...]
+        }
+        if (name) {
+            whereClause.name = { [Op.like]: `%${name}%` };
+        }
+
+        const products = await Product.findAll({
+            where: whereClause
+        });
+
+        res.json(products);
+
+    } catch (e) {
+        console.error(e);
+        res.status(500).json({ error: 'Błąd serwera' });
+    }
+});
+
+app.get('/reviews', async (req, res) => {
+    try {
+        const { productID } = req.query;
+
+        const whereClause = {};
+
+        if(!productID){
+            res.status(500).json({ error: 'Błąd podczas pobierania opinii (Brak productid)' });
+            return;
+        }
+
+        whereClause.ProductId = productID;
+
+        const reviews = await Reviews.findAll({
+            where: whereClause,
+            order: [['createdAt', 'DESC']]
+        });
+
+        res.json(reviews);
+
+    } catch (e) {
+        console.error(e);
+        res.status(500).json({ error: 'Błąd podczas pobierania opinii' });
+    }
+});
 
 app.get('/cart', verifyToken, async (req, res) => {
     try {
@@ -85,15 +159,6 @@ app.get('/cart', verifyToken, async (req, res) => {
     }
 });
 
-// Użytkownik ma wiele pozycji w koszyku
-User.hasMany(Cart);
-Cart.belongsTo(User);
-
-// Produkt może być w wielu koszykach
-Product.hasMany(Cart);
-Cart.belongsTo(Product);
-
-
 
 app.post('/register', async (req, res) => {
     const user = await User.create(req.body);
@@ -108,13 +173,75 @@ app.post('/login', async (req, res) => {
     res.json({ token, role: user.role, username: user.username });
 });
 
-app.delete('/admin/delete-product/:id', verifyToken, async (req, res) => {
-    if (req.user.role !== 'admin') return res.status(403).send("Brak uprawnień");
-    await Product.destroy({ where: { id: req.params.id } });
-    res.send("Usunięto");
+// --- USUWANIE PRODUKTU ---
+app.delete('/products/:id', async (req, res) => {
+    try {
+        const id = req.params.id;
+        
+        // Product.destroy to funkcja Sequelize do usuwania
+        const result = await Product.destroy({
+            where: { id: id }
+        });
+
+        if (result > 0) {
+            res.json({ message: "Usunięto pomyślnie" });
+        } else {
+            res.status(404).json({ message: "Nie znaleziono takiego produktu" });
+        }
+    } catch (e) {
+        res.status(500).json({ error: e.message });
+    }
 });
 
+// --- USUWANIE OPINII ---
+app.delete('/reviews/:id', async (req, res) => {
+    try {
+        const id = req.params.id;
+        
+        const result = await Reviews.destroy({
+            where: { id: id }
+        });
+
+        if (result > 0) {
+            res.json({ message: "Usunięto opinię" });
+        } else {
+            res.status(404).json({ message: "Nie znaleziono opinii" });
+        }
+    } catch (e) {
+        res.status(500).json({ error: e.message });
+    }
+});
+
+// Endpoint do DODAWANIA produktów (tego Ci brakuje!)
+app.post('/products', async (req, res) => {
+    try {
+        // Tworzymy produkt z danych przesłanych przez admina
+        const product = await Product.create(req.body);
+        res.json(product);
+    } catch (e) {
+        console.error(e);
+        res.status(500).json({ error: e.message });
+    }
+});
+
+// Użytkownik ma wiele pozycji w koszyku
+User.hasMany(Cart);
+Cart.belongsTo(User);
+
+// Produkt może być w wielu koszykach
+Product.hasMany(Cart);
+Cart.belongsTo(Product);
+
+// Użytkownik pisze opinie dowolną ilość razy, i dowolnie dużo ma każdy produkt
+Product.hasMany(Reviews);
+User.hasMany(Reviews);
+Reviews.belongsTo(Product);
+
+
+
+
 app.listen(5000, async () => {
-    await db.sync();
+    // await db.sync();
+    await db.sync({ alter: true });
     console.log("Serwer: http://localhost:5000");
 });

@@ -14,21 +14,23 @@ import Navbar from './Navbar/Navbar'
 
 // serwer autentykacja itd
 import { AuthProvider } from './API/AuthContext';
+import { DataProvider } from './API/DataContext';
 
 function App() {
   return (
     <ThemeProvider theme={theme}>
       <CssBaseline />
       <AuthProvider>
-        <BrowserRouter>
-          <Navbar/>
-          <Routes>
-            <Route path="/" element={<Home />} />
-            <Route path="/login" element={<Login />} />
-            <Route path="/shop" element={<Shop />} />
-
-          </Routes>
-        </BrowserRouter>
+        <DataProvider>
+          <BrowserRouter>
+            <Navbar/>
+            <Routes>
+              <Route path="/" element={<Home />} />
+              <Route path="/login" element={<Login />} />
+              <Route path="/shop" element={<Shop />} />
+            </Routes>
+          </BrowserRouter>
+        </DataProvider>
       </AuthProvider>
 
     </ThemeProvider>

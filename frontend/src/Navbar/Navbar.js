@@ -51,7 +51,7 @@ export default function Navbar() {
 
   return (
     <>
-      <AppBar position="sticky">
+      <AppBar position="sticky" sx={{height:"64px"}}>
         <Toolbar sx={{ position: "relative" }}>
           <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
             {/* Przycisk: widoczny tylko w wersji mobilnej */}

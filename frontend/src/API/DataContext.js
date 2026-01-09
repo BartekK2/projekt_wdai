@@ -1,7 +1,10 @@
 import { createContext, useState, useEffect,useContext } from 'react';
+import { AuthContext } from './AuthContext';
+
+
+
 export const dataContext = createContext();
 
-import { AuthContext } from './AuthContext';
 
 export const DataProvider = ({ children }) => {
     const { user } = useContext(AuthContext);
@@ -10,15 +13,13 @@ export const DataProvider = ({ children }) => {
 
     const getCart = async () => {
         try {
-            // 1. Pobieramy token (z localStorage, sessionStorage lub Contextu)
-            const token = user.token; 
+            const token = user?.token; 
             
             if (!token) {
                 console.error("Brak tokena, użytkownik niezalogowany");
                 return [];
             }
 
-            // 2. Wysyłamy zapytanie BEZ parametrów userID w URL
             const response = await fetch(`${API_URL}/cart`, {
                 method: 'GET',
                 headers: { 
@@ -95,8 +96,8 @@ export const DataProvider = ({ children }) => {
     };
 
     return (
-        <DataProvider.Provider value={{ getProducts }}>
+        <dataContext.Provider value={{ getProducts,getCart,getReviews }}>
             {children}
-        </DataProvider.Provider>
+        </dataContext.Provider>
     );
 };
