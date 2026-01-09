@@ -1,9 +1,7 @@
 /*
 TODO:
 
-trzeba dodać opinie - szybko pójdzie ale mi sie nie chce teraz
-i koszyk jeszcze chyba że to już lokalnie w sumie
-a i zamówienia
+dodaj osobno getproduct, będzie łatwiej
 */
 
 
@@ -72,7 +70,12 @@ const verifyToken = (req, res, next) => {
 
 app.get('/products', async (req, res) => {
     try {
-        const { minPrice, maxPrice, categories, name } = req.query;
+        const { minPrice, maxPrice, categories, name,id=null} = req.query;
+        if (id && id !== "null" && id !== "undefined") {
+            console.log("XDDD");
+            const product = await Product.findByPk(id); // Szuka po Primary Key (ID)
+            return res.json(product); // Zwróci pojedynczy obiekt {} zamiast listy [{}]
+        }
 
         const whereClause = {};
 
