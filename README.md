@@ -70,3 +70,5 @@ Posiada ono uprawnienia do usuwania wszystkich opinii w serwisie.
 W bazie jest też konto użytkownika:
 - **Login:** xd
 - **Hasło:** xd
+
+po próbie wejścia na /konto zostanie przekierowanie kiedy nie jest się zalogowanym
