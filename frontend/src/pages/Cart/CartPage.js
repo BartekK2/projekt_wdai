@@ -18,7 +18,6 @@ export default function CartPage() {
     const [total, setTotal] = useState(0);
     const [loading, setLoading] = useState(false);
 
-    // Automatyczne przekierowanie do logowania
     useEffect(() => {
         if (!user) {
             navigate("/login");

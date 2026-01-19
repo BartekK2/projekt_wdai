@@ -24,16 +24,13 @@ export const DataProvider = ({ children }) => {
                 method: 'GET',
                 headers: {
                     'Content-Type': 'application/json',
-                    // 3. To jest kluczowe - wysyłamy token w nagłówku
                     'Authorization': `Bearer ${token}`
                 }
             });
 
             if (!response.ok) {
-                // Obsługa wygasłego tokena (np. wylogowanie)
                 if (response.status === 401 || response.status === 403) {
                     console.log("Sesja wygasła");
-                    // tutaj ewentualnie logout()
                 }
                 throw new Error(response.status);
             }
@@ -73,7 +70,7 @@ export const DataProvider = ({ children }) => {
                 minPrice: minPrice,
                 maxPrice: maxPrice,
                 name: name,
-                id: id // w sensie że żeby sie zaczynało od tego
+                id: id
             });
             categories.forEach(cat => params.append('categories', cat));
 
@@ -168,10 +165,17 @@ export const DataProvider = ({ children }) => {
                 },
                 body: JSON.stringify({ productId, stars, description })
             });
-            if (!response.ok) throw new Error(response.status);
-            return await response.json();
+
+            const data = await response.json();
+
+            if (!response.ok) {
+                return { error: data.error || "Błąd dodawania opinii" };
+            }
+
+            return data;
         } catch (e) {
             console.error("Błąd dodawania opinii:", e);
+            return { error: "Błąd połączenia z serwerem" };
         }
     }
 

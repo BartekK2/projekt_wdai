@@ -8,6 +8,7 @@ import {
     TableContainer, TableHead, TableRow, Rating, Chip
 } from "@mui/material";
 import DeleteIcon from '@mui/icons-material/Delete';
+import HistoryIcon from '@mui/icons-material/History';
 
 export default function AdminPage() {
     const { user } = useContext(AuthContext);
@@ -33,11 +34,6 @@ export default function AdminPage() {
     };
 
     const handleDelete = async (reviewId, reviewUserId) => {
-        // Admin może usunąć wszystko, user tylko swoje
-        if (user.role !== 'admin' && user.id !== reviewUserId) {
-            alert("Możesz usuwać tylko własne opinie!");
-            return;
-        }
 
         const confirmed = window.confirm("Czy na pewno chcesz usunąć tę opinię?");
         if (confirmed) {
@@ -53,6 +49,14 @@ export default function AdminPage() {
     return (
         <Container maxWidth="lg" sx={{ mt: 4, mb: 4 }}>
             <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 3 }}>
+                {user.role != 'admin' && <Button
+                    variant="contained"
+                    startIcon={<HistoryIcon />}
+                    onClick={() => navigate('/historia')}
+                    sx={{ mr: 2 }}
+                >
+                    Historia zamówień
+                </Button>}
                 <Typography variant="h4">
                     {user.role === 'admin' ? '🔧 Panel Administratora' : '👤 Moje Opinie'}
                 </Typography>
@@ -94,7 +98,6 @@ export default function AdminPage() {
                                 </TableRow>
                             ) : (
                                 reviews
-                                    .filter(r => user.role === 'admin' || r.UserId === user.id)
                                     .map((review) => (
                                         <TableRow key={review.id}>
                                             <TableCell>{review.id}</TableCell>
@@ -110,7 +113,6 @@ export default function AdminPage() {
                                                 <IconButton
                                                     color="error"
                                                     onClick={() => handleDelete(review.id, review.UserId)}
-                                                    disabled={user.role !== 'admin' && review.UserId !== user.id}
                                                 >
                                                     <DeleteIcon />
                                                 </IconButton>

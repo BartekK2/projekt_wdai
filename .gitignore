@@ -3,8 +3,6 @@ dist/
 build/
 .DS_Store
 
-*.sqlite
-*.sqlite-journal
 
 .env
 .env.local

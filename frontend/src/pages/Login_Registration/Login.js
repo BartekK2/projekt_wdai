@@ -16,7 +16,7 @@ export default function AuthPage() {
   const queryParams = new URLSearchParams(location.search);
   const initialAction = queryParams.get("action") || "login";
 
-  const [mode, setMode] = useState(initialAction); // "login" lub "registration"
+  const [mode, setMode] = useState(initialAction);
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");

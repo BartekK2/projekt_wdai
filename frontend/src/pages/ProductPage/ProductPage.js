@@ -16,7 +16,6 @@ function Shop() {
     const [productInfo, setProductInfo] = useState(null);
     const [reviews, setReviews] = useState([]);
 
-    // Form states
     const [quantity, setQuantity] = useState(1);
     const [userRating, setUserRating] = useState(5);
     const [userReview, setUserReview] = useState("");
@@ -29,7 +28,6 @@ function Shop() {
         const fetchData = async () => {
             if (productId) {
                 const data = await getProducts([], 0, 10000, "", productId);
-                console.log("Product Data:", data);
                 setProductInfo(data);
 
                 const reviewData = await getReviews(productId);
@@ -53,12 +51,18 @@ function Shop() {
             alert("Zaloguj się aby dodać opinię");
             return;
         }
-        await addReview(productInfo.id, userRating, userReview);
-        // Refresh reviews
+        const result = await addReview(productInfo.id, userRating, userReview);
+
+        if (result && result.error) {
+            alert(result.error);
+            return;
+        }
+
         const reviewData = await getReviews(productId);
         setReviews(reviewData);
         setUserReview("");
         setUserRating(5);
+        alert("Opinia została dodana!");
     };
 
     if (!productInfo) return <Typography>Ładowanie...</Typography>;
@@ -66,7 +70,6 @@ function Shop() {
     return (
         <div className="shop-container" style={{ padding: "2rem", display: "flex", flexDirection: "column", alignItems: "center", gap: "2rem" }}>
 
-            {/* Product Card */}
             <Card sx={{ display: 'flex', flexDirection: { xs: 'column', md: 'row' }, maxWidth: 1000, width: "100%", p: 2 }}>
                 <CardMedia
                     component="img"
@@ -102,11 +105,9 @@ function Shop() {
                 </Box>
             </Card>
 
-            {/* Reviews Section */}
             <Paper sx={{ width: "100%", maxWidth: 1000, p: 3 }}>
                 <Typography variant="h4" gutterBottom>Opinie</Typography>
 
-                {/* Add Review Form */}
                 {user && (
                     <Box sx={{ mb: 4, bgcolor: '#f5f5f5', p: 2, borderRadius: 2 }}>
                         <Typography variant="h6">Dodaj swoją opinię</Typography>
@@ -131,14 +132,12 @@ function Shop() {
                     </Box>
                 )}
 
-                {/* Reviews List */}
                 <Box>
                     {reviews.length > 0 ? (
                         reviews.map((opinia) => (
                             <Box key={opinia.id} sx={{ mb: 2, pb: 2, borderBottom: '1px solid #ddd' }}>
                                 <Box sx={{ display: 'flex', alignItems: 'center', mb: 1 }}>
                                     <Avatar sx={{ width: 32, height: 32, mr: 1, bgcolor: "secondary.main" }}>
-                                        {/* Fallback if user details not populated */}
                                         U
                                     </Avatar>
                                     <Rating value={opinia.stars} readOnly size="small" />

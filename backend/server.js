@@ -53,13 +53,11 @@ const User = db.define('User', {
     role: { type: DataTypes.STRING, defaultValue: 'user' }
 });
 
-// Model zamówienia
 const Order = db.define('Order', {
     totalPrice: { type: DataTypes.FLOAT, allowNull: false },
     status: { type: DataTypes.STRING, defaultValue: 'completed' }
 });
 
-// Pozycje zamówienia (co było kupione)
 const OrderItem = db.define('OrderItem', {
     quantity: { type: DataTypes.INTEGER, allowNull: false },
     priceAtPurchase: { type: DataTypes.FLOAT, allowNull: false },
@@ -84,7 +82,7 @@ app.get('/products', async (req, res) => {
         const { minPrice, maxPrice, categories, name, id = null } = req.query;
         if (id && id !== "null" && id !== "undefined") {
             const product = await Product.findByPk(id);
-            return res.json(product); // Zwróci pojedynczy obiekt {} zamiast listy [{}]
+            return res.json(product);
         }
 
         const whereClause = {};
@@ -99,7 +97,7 @@ app.get('/products', async (req, res) => {
             }
         }
         if (categories) {
-            whereClause.category = categories; // sequelize od razu przetłumaczy na where category in [...]
+            whereClause.category = categories;
         }
         if (name) {
             whereClause.name = { [Op.like]: `%${name}%` };
@@ -175,7 +173,6 @@ app.get('/cart', verifyToken, async (req, res) => {
 
 app.post('/register', async (req, res) => {
     try {
-        // Sprawdź czy użytkownik już istnieje
         const existingUser = await User.findOne({ where: { username: req.body.username } });
         if (existingUser) {
             return res.status(409).json({ error: "Użytkownik już istnieje" });
@@ -200,11 +197,11 @@ app.post('/login', async (req, res) => {
         token: accessToken,
         refreshToken: refreshToken,
         role: user.role,
-        username: user.username
+        username: user.username,
+        id: user.id
     });
 });
 
-// --- REFRESH TOKEN ENDPOINT ---
 app.post('/refresh', async (req, res) => {
     const { refreshToken } = req.body;
 
@@ -227,12 +224,10 @@ app.post('/refresh', async (req, res) => {
     });
 });
 
-// --- USUWANIE PRODUKTU ---
 app.delete('/products/:id', async (req, res) => {
     try {
         const id = req.params.id;
 
-        // Product.destroy to funkcja Sequelize do usuwania
         const result = await Product.destroy({
             where: { id: id }
         });
@@ -247,18 +242,15 @@ app.delete('/products/:id', async (req, res) => {
     }
 });
 
-// --- USUWANIE OPINII (z autoryzacją) ---
 app.delete('/reviews/:id', verifyToken, async (req, res) => {
     try {
         const id = req.params.id;
 
-        // Pobierz opinię aby sprawdzić właściciela
         const review = await Reviews.findByPk(id);
         if (!review) {
             return res.status(404).json({ message: "Nie znaleziono opinii" });
         }
 
-        // Admin może usunąć wszystko, user tylko swoje
         if (req.user.role !== 'admin' && review.UserId !== req.user.id) {
             return res.status(403).json({ error: "Brak uprawnień do usunięcia tej opinii" });
         }
@@ -271,17 +263,14 @@ app.delete('/reviews/:id', verifyToken, async (req, res) => {
     }
 });
 
-// --- POBIERANIE WSZYSTKICH OPINII (dla panelu admina) ---
 app.get('/reviews/all', verifyToken, async (req, res) => {
     try {
         let reviews;
         if (req.user.role === 'admin') {
-            // Admin widzi wszystkie
             reviews = await Reviews.findAll({
                 order: [['createdAt', 'DESC']]
             });
         } else {
-            // User widzi tylko swoje
             reviews = await Reviews.findAll({
                 where: { UserId: req.user.id },
                 order: [['createdAt', 'DESC']]
@@ -294,10 +283,8 @@ app.get('/reviews/all', verifyToken, async (req, res) => {
     }
 });
 
-// Endpoint do DODAWANIA produktów (tego Ci brakuje!)
 app.post('/products', async (req, res) => {
     try {
-        // Tworzymy produkt z danych przesłanych przez admina
         const product = await Product.create(req.body);
         res.json(product);
     } catch (e) {
@@ -306,19 +293,15 @@ app.post('/products', async (req, res) => {
     }
 });
 
-// Użytkownik ma wiele pozycji w koszyku
 User.hasMany(Cart);
 Cart.belongsTo(User);
 
-// Produkt może być w wielu koszykach
 Product.hasMany(Cart);
 Cart.belongsTo(Product);
 
-// Użytkownik pisze opinie dowolną ilość razy, i dowolnie dużo ma każdy produkt
 Product.hasMany(Reviews);
 User.hasMany(Reviews);
 
-// --- DODAWANIE DO KOSZYKA ---
 app.post('/cart', verifyToken, async (req, res) => {
     try {
         const { productId, quantity } = req.body;
@@ -347,13 +330,12 @@ app.post('/cart', verifyToken, async (req, res) => {
     }
 });
 
-// --- USUWANIE Z KOSZYKA ---
 app.delete('/cart/:id', verifyToken, async (req, res) => {
     try {
         const result = await Cart.destroy({
             where: {
                 id: req.params.id,
-                UserId: req.user.id // Security: only own cart items
+                UserId: req.user.id
             }
         });
         res.json({ message: "Usunięto z koszyka" });
@@ -362,7 +344,6 @@ app.delete('/cart/:id', verifyToken, async (req, res) => {
     }
 });
 
-// --- UPDATE ILOŚCI W KOSZYKU ---
 app.patch('/cart/:id', verifyToken, async (req, res) => {
     try {
         const { quantity } = req.body;
@@ -387,12 +368,10 @@ app.patch('/cart/:id', verifyToken, async (req, res) => {
     }
 });
 
-// --- DODAWANIE OPINII (max 1 na produkt per user) ---
 app.post('/reviews', verifyToken, async (req, res) => {
     try {
         const { productId, stars, description } = req.body;
 
-        // Sprawdź czy user już dodał opinię do tego produktu
         const existingReview = await Reviews.findOne({
             where: { UserId: req.user.id, ProductId: productId }
         });
@@ -421,17 +400,14 @@ User.hasMany(Reviews);
 Reviews.belongsTo(Product);
 Reviews.belongsTo(User);
 
-// Relacje zamówień
 User.hasMany(Order);
 Order.belongsTo(User);
 Order.hasMany(OrderItem);
 OrderItem.belongsTo(Order);
 OrderItem.belongsTo(Product);
 
-// --- SKŁADANIE ZAMÓWIENIA (Checkout) ---
 app.post('/orders', verifyToken, async (req, res) => {
     try {
-        // Pobierz koszyk użytkownika
         const cartItems = await Cart.findAll({
             where: { UserId: req.user.id },
             include: [Product]
@@ -441,19 +417,16 @@ app.post('/orders', verifyToken, async (req, res) => {
             return res.status(400).json({ error: "Koszyk jest pusty" });
         }
 
-        // Oblicz sumę
         const totalPrice = cartItems.reduce((sum, item) => {
             return sum + (item.quantity * item.Product.price);
         }, 0);
 
-        // Utwórz zamówienie
         const order = await Order.create({
             UserId: req.user.id,
             totalPrice: totalPrice,
             status: 'completed'
         });
 
-        // Utwórz pozycje zamówienia
         for (const item of cartItems) {
             await OrderItem.create({
                 OrderId: order.id,
@@ -464,7 +437,6 @@ app.post('/orders', verifyToken, async (req, res) => {
             });
         }
 
-        // Wyczyść koszyk
         await Cart.destroy({ where: { UserId: req.user.id } });
 
         res.json({ message: "Zamówienie złożone!", orderId: order.id });
@@ -474,7 +446,6 @@ app.post('/orders', verifyToken, async (req, res) => {
     }
 });
 
-// --- HISTORIA ZAMÓWIEŃ ---
 app.get('/orders', verifyToken, async (req, res) => {
     try {
         const orders = await Order.findAll({
@@ -489,7 +460,6 @@ app.get('/orders', verifyToken, async (req, res) => {
     }
 });
 
-// --- SZCZEGÓŁY ZAMÓWIENIA ---
 app.get('/orders/:id', verifyToken, async (req, res) => {
     try {
         const order = await Order.findOne({
