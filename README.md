@@ -6,10 +6,9 @@
 
 ### Opis Projektu
 Aplikacja sklepu internetowego umożliwiająca przeglądanie produktów, dodawanie ich do koszyka, oraz wystawianie opinii.
-Aplikacja została zrealizowana w architekturze Client-Server.
 
 ### Funkcjonalności
-1.  **Strona Główna**: Landing page sklepu.
+1.  **Strona Główna**
 2.  **Sklep**:
     - Lista produktów pobierana z bazy danych.
     - Filtrowanie po kategorii, cenie oraz wyszukiwanie po nazwie.
@@ -25,18 +24,21 @@ Aplikacja została zrealizowana w architekturze Client-Server.
     - Rejestracja i Logowanie (JWT + Refresh Token).
     - Automatyczne odświeżanie tokena przed wygaśnięciem.
     - Sesja użytkownika przechowywana po stronie klienta.
+    
+6.  **Konto administratora**:
+    - Możliwość usuwania dowolnych opinii w serwisie.
 
 ### Użyta Technologia i Biblioteki
 
 **Frontend:**
 -   React 19
 -   React Router Dom 7
--   Material UI (MUI) - biblioteka komponentów (zgodnie z wymaganiami na 7pkt)
--   DotLottie - animacje
+-   Material UI (MUI)
+-   DotLottie
 
 **Backend:**
 -   Node.js + Express
--   SQLite + Sequelize (Baza danych SQL - zgodnie z wymaganiami na 7pkt/8pkt)
+-   SQLite + Sequelize
 -   JWT (JSON Web Token) - autentykacja
 
 ### Uruchomienie Projektu
@@ -47,7 +49,8 @@ cd backend
 npm install
 node server.js
 ```
-Serwer uruchomi się na porcie 5000.
+Serwer uruchomi się na porcie **5001**.
+W katalogu `backend` znajduje się plik `postman_dokumentacja.postman_collection.json`, który można zaimportować do Postmana w celu przetestowania API.
 
 **Frontend:**
 ```bash
@@ -56,3 +59,14 @@ npm install
 npm start
 ```
 Aplikacja uruchomi się na porcie 3000.
+
+### Konto Administratora
+W systemie istnieje domyślne konto administratora:
+- **Login:** admin
+- **Hasło:** admin
+Posiada ono uprawnienia do usuwania wszystkich opinii w serwisie.
+
+### Konto użytkownika
+W bazie jest też konto użytkownika:
+- **Login:** xd
+- **Hasło:** xd
