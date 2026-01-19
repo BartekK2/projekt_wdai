@@ -7,6 +7,9 @@ import Home from './pages/Home/Home';
 import Login from './pages/Login_Registration/Login';
 import Shop from './pages/Shop/ShopPage';
 import ProductPage from './pages/ProductPage/ProductPage'
+import CartPage from './pages/Cart/CartPage';
+import AdminPage from './pages/Admin/AdminPage';
+import OrderHistoryPage from './pages/OrderHistory/OrderHistoryPage';
 import "./App.css"
 
 // elementy globalne tj np navbar
@@ -23,12 +26,15 @@ function App() {
       <AuthProvider>
         <DataProvider>
           <BrowserRouter>
-            <Navbar/>
+            <Navbar />
             <Routes>
               <Route path="/" element={<Home />} />
               <Route path="/login" element={<Login />} />
               <Route path="/shop" element={<Shop />} />
               <Route path="/product" element={<ProductPage />} />
+              <Route path="/koszyk" element={<CartPage />} />
+              <Route path="/konto" element={<AdminPage />} />
+              <Route path="/historia" element={<OrderHistoryPage />} />
 
             </Routes>
           </BrowserRouter>

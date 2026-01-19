@@ -1,14 +1,5 @@
-/*
-TODO:
-- dodaj przekierowanie gdzieś na sklep czy coś po uplywie kilku
-sekund od zalogowania zeby jeszcze byl widoczny komunikat
-
-- dodaj przekierowanie gdy uzytkownik jest juz zalogowany
-*/
-
-
-import { useState, useEffect, useContext} from "react";
-import { useLocation,useNavigate } from "react-router-dom";
+import { useState, useEffect, useContext } from "react";
+import { useLocation, useNavigate } from "react-router-dom";
 import {
   Box,
   TextField,
@@ -19,7 +10,7 @@ import {
 import { AuthContext } from "../../API/AuthContext";
 
 export default function AuthPage() {
-  const {user,login, register } = useContext(AuthContext);
+  const { user, login, register } = useContext(AuthContext);
   const location = useLocation();
   const navigate = useNavigate();
   const queryParams = new URLSearchParams(location.search);
@@ -41,29 +32,29 @@ export default function AuthPage() {
 
   useEffect(() => {
     if (user) {
-      navigate("/", { replace: true }); 
+      navigate("/", { replace: true });
     }
   }, [user, navigate]);
 
   const handleSubmit = async () => {
     setError("");
     setSuccess("");
-    
+
     if (!username || !password) {
       setError("Wypełnij wszystkie pola!");
       return;
     }
 
     if (mode === "login") {
-      const result = await login(username, password); 
-      
+      const result = await login(username, password);
+
       console.log("Wynik logowania:", result);
 
       if (result && result.success) {
         setSuccess("Zalogowano pomyślnie!");
-        
+
         setTimeout(() => {
-             navigate("/"); 
+          navigate("/");
         }, 2000);
       } else {
         setError(result?.msg || "Niepoprawny login lub hasło!");
@@ -71,7 +62,7 @@ export default function AuthPage() {
 
     } else if (mode === "registration") {
       const result = await register(username, password);
-      
+
       if (result && result.success) {
         setSuccess("Rejestracja udana! Możesz teraz zalogować się.");
         setMode("login");

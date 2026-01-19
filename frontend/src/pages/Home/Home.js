@@ -6,17 +6,10 @@ import { Link } from "react-router-dom";
 import { useContext } from "react";
 import { AuthContext } from "../../API/AuthContext";
 
-/*
-TODO:
-- może trzeba by było pogrzebać w animacji żeby zmienić kolor bluzki na inny
-bo się zlewa z tłem
-*/
-
-
 
 function Home() {
   const { user } = useContext(AuthContext);
-  
+
   return (
     <div className="home-container">
       <div className="home-left">
@@ -24,29 +17,29 @@ function Home() {
           Witaj {user && 'z powrotem'} na naszej stronie!
         </Typography>
         <Typography variant="h6" className="home-subtitle">
-          {user?
-          'Miłych zakupów!'
-          :
-          'Zaloguj się, aby rozpocząć, lub zarejestruj nowe konto'
+          {user ?
+            'Miłych zakupów!'
+            :
+            'Zaloguj się, aby rozpocząć, lub zarejestruj nowe konto'
           }
         </Typography>
         {user ?
-        <div className="home-buttons">
-          <Button variant="contained" color="primary" size="large" component={Link}  to="/shop">
-            Nasze produkty
-          </Button>
-        </div>
-        :
-        <div className="home-buttons">
-          <Button variant="contained" color="secondary" sx={{color:"white"}} size="large" component={Link}  to="/login?action=login">
-            Zaloguj się
-          </Button>
-          <Button color="secondary" variant="outlined" size="large" component={Link}  to="/login?action=registration">
-            Zarejestruj się
-          </Button>
-        </div>
+          <div className="home-buttons">
+            <Button variant="contained" color="primary" size="large" component={Link} to="/shop">
+              Nasze produkty
+            </Button>
+          </div>
+          :
+          <div className="home-buttons">
+            <Button variant="contained" color="secondary" sx={{ color: "white" }} size="large" component={Link} to="/login?action=login">
+              Zaloguj się
+            </Button>
+            <Button color="secondary" variant="outlined" size="large" component={Link} to="/login?action=registration">
+              Zarejestruj się
+            </Button>
+          </div>
         }
-        
+
       </div>
       <div className="home-right">
         <DotLottiePlayer
