@@ -31,15 +31,15 @@ Aplikacja sklepu internetowego umożliwiająca przeglądanie produktów, dodawan
 ### Użyta Technologia i Biblioteki
 
 **Frontend:**
--   React 19
--   React Router Dom 7
--   Material UI (MUI)
+-   React
+-   React Router
+-   Material UI
 -   DotLottie
 
 **Backend:**
 -   Node.js + Express
 -   SQLite + Sequelize
--   JWT (JSON Web Token) - autentykacja
+-   JWT
 
 ### Uruchomienie Projektu
 
@@ -50,7 +50,7 @@ npm install
 node server.js
 ```
 Serwer uruchomi się na porcie **5001**.
-W katalogu `backend` znajduje się plik `postman_dokumentacja.postman_collection.json`, który można zaimportować do Postmana w celu przetestowania API.
+W katalogu `backend` znajduje się plik `postman_dokumentacja.postman_collection.json` do przetestowania endpointów.
 
 **Frontend:**
 ```bash
@@ -61,7 +61,7 @@ npm start
 Aplikacja uruchomi się na porcie 3000.
 
 ### Konto Administratora
-W systemie istnieje domyślne konto administratora:
+W systemie istnieje konto administratora:
 - **Login:** admin
 - **Hasło:** admin
 Posiada ono uprawnienia do usuwania wszystkich opinii w serwisie.
